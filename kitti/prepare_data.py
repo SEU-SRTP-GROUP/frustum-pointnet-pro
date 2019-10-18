@@ -16,7 +16,7 @@ sys.path.append(BASE_DIR)
 sys.path.append(os.path.join(ROOT_DIR, 'mayavi'))
 import kitti_util as utils
 import pickle as pickle
-from kitti_object_test import *
+from kitti_object_train import *
 import argparse
 
 

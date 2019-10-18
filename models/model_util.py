@@ -29,6 +29,55 @@ g_mean_size_arr = np.zeros((NUM_SIZE_CLUSTER, 3)) # size clustrs
 for i in range(NUM_SIZE_CLUSTER):
     g_mean_size_arr[i,:] = g_type_mean_size[g_class2type[i]]
 
+################################
+# some model functions for frustum-pointnet-pro
+################################
+def extract_h2_features(h2,scope,name,reuse=False,channels=[4,16,32,3]):
+    '''
+    build a len(channels) layers MLP to extract the feature of h2
+    :param h2:   a rank1 tensor shape[1,1] Euclidean distance between two pointnets
+    :param scope:   scope name
+    :param name: the name of the extractor
+    :param channels:  int list ,the channels of each layer
+    :param reuse reuse the varible with the name of scope
+    :return: 1D tensor rank=1 shape=[1,channels[-1]]
+    '''
+    def full_connected(input,ouputchanels,scope,name,
+                       activate_fn=tf.nn.relu,
+                       use_xavier=True,
+                       stddev=1e-3,
+                       weight_decay=None,
+                       bn=False,
+                       bn_decay=None,
+                       is_training=None):
+        inputChannels = input.get_shape().as_list()[-1]
+        with tf.variable_scope(scope,reuse=tf.AUTO_REUSE):
+            if use_xavier:
+                initializer = tf.contrib.layers.xavier_initializer()
+            else:
+                initializer = tf.truncated_normal_initializer(stddev=stddev)
+            weight= tf.get_variable(name+'_weight', [inputChannels,ouputchanels], initializer=initializer, dtype=tf.float32)
+            biases = tf.get_variable(name+"_biases", [ouputchanels], initializer=tf.constant_initializer(0.0))
+            if weight_decay is not None:
+                weight_decay = tf.multiply(tf.nn.l2_loss(weight), weight_decay, name='weight_loss')
+                tf.add_to_collection('losses', weight_decay)
+            outputs = tf.matmul(input, weight)
+            outputs = tf.nn.bias_add(outputs, biases)
+            if bn:
+                outputs = tf_util.batch_norm_for_fc(outputs, is_training, bn_decay, 'bn')
+
+            if activate_fn is not None:
+                outputs =activate_fn(outputs)
+            return outputs
+
+    feature = tf.reshape(h2,[1,-1])
+    with tf.variable_scope(scope,reuse=tf.AUTO_REUSE):
+        for i in range(len(channels)):
+            feature = full_connected(feature,channels[i],scope,"feature_extract_fullc_"+str(i))
+    return feature
+
+
+
 # -----------------
 # TF Functions Helpers
 # -----------------

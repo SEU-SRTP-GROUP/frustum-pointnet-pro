@@ -31,9 +31,9 @@ class kitti_object(object):
         self.split_dir = os.path.join(root_dir, split)
 
         if split == 'training':
-            self.num_samples = 801               #调训练规模？,此外还需要更改 /frustum-pointnets/kitti/image_sets/train.txt的数值，test应该同理
+            self.num_samples =  7481              #调训练规模？,此外还需要更改 /frustum-pointnets/kitti/image_sets/train.txt的数值，test应该同理
         elif split == 'testing':
-            self.num_samples =801
+            self.num_samples =7518
         else:
             print('Unknown split: %s' % (split))
             exit(-1)
