@@ -32,9 +32,9 @@ for i in range(NUM_SIZE_CLUSTER):
 ################################
 # some model functions for frustum-pointnet-pro
 ################################
-def extract_h2_features(h2,scope,name,reuse=False,channels=[4,16,32,3]):
+def extract_h2_features(h2,scope,name,reuse=False,channels=[4,16,32,16,3]):
     '''
-    build a len(channels) layers MLP to extract the feature of h2
+    build a 4 layers MLP to extract the feature of h2
     :param h2:   a rank1 tensor shape[1,1] Euclidean distance between two pointnets
     :param scope:   scope name
     :param name: the name of the extractor
@@ -42,6 +42,7 @@ def extract_h2_features(h2,scope,name,reuse=False,channels=[4,16,32,3]):
     :param reuse reuse the varible with the name of scope
     :return: 1D tensor rank=1 shape=[1,channels[-1]]
     '''
+    assert(len(channels)==5)
     def full_connected(input,ouputchanels,scope,name,
                        activate_fn=tf.nn.relu,
                        use_xavier=True,
@@ -71,9 +72,22 @@ def extract_h2_features(h2,scope,name,reuse=False,channels=[4,16,32,3]):
             return outputs
 
     feature = tf.reshape(h2,[1,-1])
-    with tf.variable_scope(scope,reuse=tf.AUTO_REUSE):
-        for i in range(len(channels)):
-            feature = full_connected(feature,channels[i],scope,"feature_extract_fullc_"+str(i))
+
+    # def cond(i,feature):
+    #     return i<n
+    # def body(i,feature):
+    #     feature=full_connected(feature,channels[i],scope,"feature_extract_fullc_"+str(i))
+    #     return i+1, feature
+    #
+    # with tf.variable_scope(scope,reuse=tf.AUTO_REUSE):
+    #     # for i in range(len(channels)):
+    #     #     feature = full_connected(feature,channels[i],scope,"feature_extract_fullc_"+str(i))
+    #     tf.while_loop(cond,body,(0,feature))
+    feature =  full_connected(feature,channels[0],scope,"feature_extract_fullc_0")
+    feature = full_connected(feature, channels[1], scope, "feature_extract_fullc_1")
+    feature = full_connected(feature, channels[2], scope, "feature_extract_fullc_2")
+    feature = full_connected(feature, channels[3], scope, "feature_extract_fullc_3")
+    feature = full_connected(feature, channels[4], scope, "feature_extract_fullc_4")
     return feature
 
 

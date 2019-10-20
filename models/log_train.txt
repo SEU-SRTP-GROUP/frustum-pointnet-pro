@@ -1,0 +1,814 @@
+Namespace(batch_size=32, decay_rate=0.5, decay_step=800000, gpu=0, learning_rate=0.001, log_dir='train/log_v1', max_epoch=201, model='frustum_pointnets_v1', momentum=0.9, no_intensity=False, num_point=1024, optimizer='adam', restore_model_path=None)
+pid: 20128
+**** EPOCH 000 ****
+2019-10-20 18:08:55.816103
+ -- 010 / 2295 --
+mean loss: 60.854062
+segmentation accuracy: 0.531659
+box IoU (ground/3D): 0.114699 / 0.069000
+box estimation accuracy (IoU=0.7): 0.000000
+ -- 020 / 2295 --
+mean loss: 42.012620
+segmentation accuracy: 0.554810
+box IoU (ground/3D): 0.158225 / 0.116605
+box estimation accuracy (IoU=0.7): 0.000000
+ -- 030 / 2295 --
+mean loss: 34.012524
+segmentation accuracy: 0.568588
+box IoU (ground/3D): 0.222255 / 0.171291
+box estimation accuracy (IoU=0.7): 0.003125
+ -- 040 / 2295 --
+mean loss: 28.897980
+segmentation accuracy: 0.575476
+box IoU (ground/3D): 0.216160 / 0.172903
+box estimation accuracy (IoU=0.7): 0.006250
+ -- 050 / 2295 --
+mean loss: 32.785378
+segmentation accuracy: 0.584076
+box IoU (ground/3D): 0.242853 / 0.195926
+box estimation accuracy (IoU=0.7): 0.009375
+ -- 060 / 2295 --
+mean loss: 26.161003
+segmentation accuracy: 0.588489
+box IoU (ground/3D): 0.252541 / 0.207137
+box estimation accuracy (IoU=0.7): 0.009375
+ -- 070 / 2295 --
+mean loss: 26.715870
+segmentation accuracy: 0.612991
+box IoU (ground/3D): 0.290826 / 0.241427
+box estimation accuracy (IoU=0.7): 0.028125
+ -- 080 / 2295 --
+mean loss: 27.189829
+segmentation accuracy: 0.612750
+box IoU (ground/3D): 0.279712 / 0.230565
+box estimation accuracy (IoU=0.7): 0.009375
+ -- 090 / 2295 --
+mean loss: 27.221890
+segmentation accuracy: 0.645581
+box IoU (ground/3D): 0.287482 / 0.238260
+box estimation accuracy (IoU=0.7): 0.012500
+ -- 100 / 2295 --
+mean loss: 28.495332
+segmentation accuracy: 0.656168
+box IoU (ground/3D): 0.275248 / 0.223365
+box estimation accuracy (IoU=0.7): 0.003125
+ -- 110 / 2295 --
+mean loss: 28.781574
+segmentation accuracy: 0.663715
+box IoU (ground/3D): 0.268466 / 0.227091
+box estimation accuracy (IoU=0.7): 0.009375
+ -- 120 / 2295 --
+mean loss: 24.647931
+segmentation accuracy: 0.693002
+box IoU (ground/3D): 0.287294 / 0.240791
+box estimation accuracy (IoU=0.7): 0.006250
+ -- 130 / 2295 --
+mean loss: 22.995019
+segmentation accuracy: 0.711493
+box IoU (ground/3D): 0.338690 / 0.278390
+box estimation accuracy (IoU=0.7): 0.028125
+ -- 140 / 2295 --
+mean loss: 27.878472
+segmentation accuracy: 0.710889
+box IoU (ground/3D): 0.286647 / 0.231623
+box estimation accuracy (IoU=0.7): 0.012500
+ -- 150 / 2295 --
+mean loss: 28.428241
+segmentation accuracy: 0.713629
+box IoU (ground/3D): 0.301704 / 0.245797
+box estimation accuracy (IoU=0.7): 0.018750
+ -- 160 / 2295 --
+mean loss: 24.739300
+segmentation accuracy: 0.713629
+box IoU (ground/3D): 0.302061 / 0.252863
+box estimation accuracy (IoU=0.7): 0.028125
+ -- 170 / 2295 --
+mean loss: 25.722066
+segmentation accuracy: 0.743213
+box IoU (ground/3D): 0.352653 / 0.297593
+box estimation accuracy (IoU=0.7): 0.018750
+ -- 180 / 2295 --
+mean loss: 21.928118
+segmentation accuracy: 0.741122
+box IoU (ground/3D): 0.312181 / 0.260602
+box estimation accuracy (IoU=0.7): 0.009375
+ -- 190 / 2295 --
+mean loss: 23.673290
+segmentation accuracy: 0.743469
+box IoU (ground/3D): 0.319157 / 0.275542
+box estimation accuracy (IoU=0.7): 0.018750
+ -- 200 / 2295 --
+mean loss: 22.687955
+segmentation accuracy: 0.729562
+box IoU (ground/3D): 0.333630 / 0.282220
+box estimation accuracy (IoU=0.7): 0.015625
+ -- 210 / 2295 --
+mean loss: 21.784317
+segmentation accuracy: 0.759000
+box IoU (ground/3D): 0.332415 / 0.278743
+box estimation accuracy (IoU=0.7): 0.009375
+ -- 220 / 2295 --
+mean loss: 18.520858
+segmentation accuracy: 0.761337
+box IoU (ground/3D): 0.354638 / 0.299350
+box estimation accuracy (IoU=0.7): 0.021875
+ -- 230 / 2295 --
+mean loss: 18.776565
+segmentation accuracy: 0.764227
+box IoU (ground/3D): 0.352137 / 0.298173
+box estimation accuracy (IoU=0.7): 0.025000
+ -- 240 / 2295 --
+mean loss: 16.549711
+segmentation accuracy: 0.775568
+box IoU (ground/3D): 0.375119 / 0.323780
+box estimation accuracy (IoU=0.7): 0.018750
+ -- 250 / 2295 --
+mean loss: 20.599037
+segmentation accuracy: 0.762061
+box IoU (ground/3D): 0.375039 / 0.316260
+box estimation accuracy (IoU=0.7): 0.012500
+ -- 260 / 2295 --
+mean loss: 19.510532
+segmentation accuracy: 0.784131
+box IoU (ground/3D): 0.369295 / 0.319826
+box estimation accuracy (IoU=0.7): 0.031250
+ -- 270 / 2295 --
+mean loss: 16.472277
+segmentation accuracy: 0.785947
+box IoU (ground/3D): 0.372667 / 0.320728
+box estimation accuracy (IoU=0.7): 0.025000
+ -- 280 / 2295 --
+mean loss: 16.176047
+segmentation accuracy: 0.779352
+box IoU (ground/3D): 0.397362 / 0.343599
+box estimation accuracy (IoU=0.7): 0.046875
+ -- 290 / 2295 --
+mean loss: 12.671186
+segmentation accuracy: 0.795300
+box IoU (ground/3D): 0.429693 / 0.372711
+box estimation accuracy (IoU=0.7): 0.059375
+ -- 300 / 2295 --
+mean loss: 15.761587
+segmentation accuracy: 0.777225
+box IoU (ground/3D): 0.404264 / 0.352038
+box estimation accuracy (IoU=0.7): 0.056250
+ -- 310 / 2295 --
+mean loss: 14.992572
+segmentation accuracy: 0.797137
+box IoU (ground/3D): 0.411511 / 0.353771
+box estimation accuracy (IoU=0.7): 0.056250
+ -- 320 / 2295 --
+mean loss: 14.925456
+segmentation accuracy: 0.804263
+box IoU (ground/3D): 0.425045 / 0.363839
+box estimation accuracy (IoU=0.7): 0.056250
+ -- 330 / 2295 --
+mean loss: 15.666986
+segmentation accuracy: 0.801440
+box IoU (ground/3D): 0.421973 / 0.357883
+box estimation accuracy (IoU=0.7): 0.040625
+ -- 340 / 2295 --
+mean loss: 16.143880
+segmentation accuracy: 0.799133
+box IoU (ground/3D): 0.430806 / 0.365546
+box estimation accuracy (IoU=0.7): 0.056250
+ -- 350 / 2295 --
+mean loss: 16.548131
+segmentation accuracy: 0.809073
+box IoU (ground/3D): 0.389766 / 0.334641
+box estimation accuracy (IoU=0.7): 0.031250
+ -- 360 / 2295 --
+mean loss: 15.340839
+segmentation accuracy: 0.814172
+box IoU (ground/3D): 0.407885 / 0.353758
+box estimation accuracy (IoU=0.7): 0.065625
+ -- 370 / 2295 --
+mean loss: 14.705577
+segmentation accuracy: 0.816336
+box IoU (ground/3D): 0.413355 / 0.361435
+box estimation accuracy (IoU=0.7): 0.053125
+ -- 380 / 2295 --
+mean loss: 16.813679
+segmentation accuracy: 0.797766
+box IoU (ground/3D): 0.391402 / 0.342519
+box estimation accuracy (IoU=0.7): 0.062500
+ -- 390 / 2295 --
+mean loss: 15.332018
+segmentation accuracy: 0.807584
+box IoU (ground/3D): 0.406358 / 0.349781
+box estimation accuracy (IoU=0.7): 0.084375
+ -- 400 / 2295 --
+mean loss: 18.363435
+segmentation accuracy: 0.820044
+box IoU (ground/3D): 0.391357 / 0.339769
+box estimation accuracy (IoU=0.7): 0.068750
+ -- 410 / 2295 --
+mean loss: 15.252876
+segmentation accuracy: 0.807721
+box IoU (ground/3D): 0.400049 / 0.341084
+box estimation accuracy (IoU=0.7): 0.040625
+ -- 420 / 2295 --
+mean loss: 14.939115
+segmentation accuracy: 0.787878
+box IoU (ground/3D): 0.423417 / 0.366290
+box estimation accuracy (IoU=0.7): 0.040625
+ -- 430 / 2295 --
+mean loss: 21.303299
+segmentation accuracy: 0.797635
+box IoU (ground/3D): 0.363637 / 0.316112
+box estimation accuracy (IoU=0.7): 0.015625
+ -- 440 / 2295 --
+mean loss: 20.470334
+segmentation accuracy: 0.801907
+box IoU (ground/3D): 0.356461 / 0.309103
+box estimation accuracy (IoU=0.7): 0.034375
+ -- 450 / 2295 --
+mean loss: 15.009050
+segmentation accuracy: 0.827441
+box IoU (ground/3D): 0.431530 / 0.374894
+box estimation accuracy (IoU=0.7): 0.071875
+ -- 460 / 2295 --
+mean loss: 14.877606
+segmentation accuracy: 0.813025
+box IoU (ground/3D): 0.408392 / 0.355295
+box estimation accuracy (IoU=0.7): 0.046875
+ -- 470 / 2295 --
+mean loss: 14.929964
+segmentation accuracy: 0.816516
+box IoU (ground/3D): 0.403256 / 0.354295
+box estimation accuracy (IoU=0.7): 0.068750
+ -- 480 / 2295 --
+mean loss: 16.437188
+segmentation accuracy: 0.830118
+box IoU (ground/3D): 0.428538 / 0.367453
+box estimation accuracy (IoU=0.7): 0.062500
+ -- 490 / 2295 --
+mean loss: 14.649515
+segmentation accuracy: 0.829370
+box IoU (ground/3D): 0.417559 / 0.364534
+box estimation accuracy (IoU=0.7): 0.075000
+ -- 500 / 2295 --
+mean loss: 15.776880
+segmentation accuracy: 0.834772
+box IoU (ground/3D): 0.442987 / 0.385709
+box estimation accuracy (IoU=0.7): 0.090625
+ -- 510 / 2295 --
+mean loss: 15.581659
+segmentation accuracy: 0.829102
+box IoU (ground/3D): 0.446890 / 0.388006
+box estimation accuracy (IoU=0.7): 0.084375
+ -- 520 / 2295 --
+mean loss: 15.859429
+segmentation accuracy: 0.803870
+box IoU (ground/3D): 0.424060 / 0.372032
+box estimation accuracy (IoU=0.7): 0.065625
+ -- 530 / 2295 --
+mean loss: 13.917686
+segmentation accuracy: 0.813748
+box IoU (ground/3D): 0.426849 / 0.374543
+box estimation accuracy (IoU=0.7): 0.081250
+ -- 540 / 2295 --
+mean loss: 13.972324
+segmentation accuracy: 0.806882
+box IoU (ground/3D): 0.415414 / 0.356959
+box estimation accuracy (IoU=0.7): 0.053125
+ -- 550 / 2295 --
+mean loss: 16.199498
+segmentation accuracy: 0.812109
+box IoU (ground/3D): 0.439027 / 0.383252
+box estimation accuracy (IoU=0.7): 0.093750
+ -- 560 / 2295 --
+mean loss: 14.540636
+segmentation accuracy: 0.823141
+box IoU (ground/3D): 0.446397 / 0.391395
+box estimation accuracy (IoU=0.7): 0.075000
+ -- 570 / 2295 --
+mean loss: 13.842172
+segmentation accuracy: 0.823398
+box IoU (ground/3D): 0.425371 / 0.372390
+box estimation accuracy (IoU=0.7): 0.056250
+ -- 580 / 2295 --
+mean loss: 13.709937
+segmentation accuracy: 0.816611
+box IoU (ground/3D): 0.464906 / 0.404735
+box estimation accuracy (IoU=0.7): 0.100000
+ -- 590 / 2295 --
+mean loss: 13.854620
+segmentation accuracy: 0.828220
+box IoU (ground/3D): 0.439393 / 0.383012
+box estimation accuracy (IoU=0.7): 0.093750
+ -- 600 / 2295 --
+mean loss: 14.159897
+segmentation accuracy: 0.840216
+box IoU (ground/3D): 0.445564 / 0.393977
+box estimation accuracy (IoU=0.7): 0.078125
+ -- 610 / 2295 --
+mean loss: 12.946178
+segmentation accuracy: 0.820383
+box IoU (ground/3D): 0.420841 / 0.363576
+box estimation accuracy (IoU=0.7): 0.050000
+ -- 620 / 2295 --
+mean loss: 14.674675
+segmentation accuracy: 0.818253
+box IoU (ground/3D): 0.438378 / 0.385399
+box estimation accuracy (IoU=0.7): 0.087500
+ -- 630 / 2295 --
+mean loss: 14.678789
+segmentation accuracy: 0.803455
+box IoU (ground/3D): 0.449234 / 0.393606
+box estimation accuracy (IoU=0.7): 0.084375
+ -- 640 / 2295 --
+mean loss: 15.588711
+segmentation accuracy: 0.836057
+box IoU (ground/3D): 0.439655 / 0.379725
+box estimation accuracy (IoU=0.7): 0.078125
+ -- 650 / 2295 --
+mean loss: 13.568496
+segmentation accuracy: 0.825250
+box IoU (ground/3D): 0.417903 / 0.369125
+box estimation accuracy (IoU=0.7): 0.078125
+ -- 660 / 2295 --
+mean loss: 13.628923
+segmentation accuracy: 0.834946
+box IoU (ground/3D): 0.463558 / 0.409405
+box estimation accuracy (IoU=0.7): 0.096875
+ -- 670 / 2295 --
+mean loss: 14.252024
+segmentation accuracy: 0.828116
+box IoU (ground/3D): 0.446375 / 0.393511
+box estimation accuracy (IoU=0.7): 0.090625
+ -- 680 / 2295 --
+mean loss: 11.028118
+segmentation accuracy: 0.847202
+box IoU (ground/3D): 0.485958 / 0.428999
+box estimation accuracy (IoU=0.7): 0.106250
+ -- 690 / 2295 --
+mean loss: 15.816883
+segmentation accuracy: 0.833301
+box IoU (ground/3D): 0.441358 / 0.384361
+box estimation accuracy (IoU=0.7): 0.093750
+ -- 700 / 2295 --
+mean loss: 11.829716
+segmentation accuracy: 0.823499
+box IoU (ground/3D): 0.448977 / 0.395944
+box estimation accuracy (IoU=0.7): 0.071875
+ -- 710 / 2295 --
+mean loss: 13.051853
+segmentation accuracy: 0.833713
+box IoU (ground/3D): 0.440456 / 0.383320
+box estimation accuracy (IoU=0.7): 0.053125
+ -- 720 / 2295 --
+mean loss: 13.695488
+segmentation accuracy: 0.824783
+box IoU (ground/3D): 0.447327 / 0.389435
+box estimation accuracy (IoU=0.7): 0.087500
+ -- 730 / 2295 --
+mean loss: 15.469176
+segmentation accuracy: 0.833585
+box IoU (ground/3D): 0.437723 / 0.386561
+box estimation accuracy (IoU=0.7): 0.103125
+ -- 740 / 2295 --
+mean loss: 16.052876
+segmentation accuracy: 0.806799
+box IoU (ground/3D): 0.426829 / 0.374591
+box estimation accuracy (IoU=0.7): 0.093750
+ -- 750 / 2295 --
+mean loss: 12.859820
+segmentation accuracy: 0.826901
+box IoU (ground/3D): 0.462574 / 0.400136
+box estimation accuracy (IoU=0.7): 0.087500
+ -- 760 / 2295 --
+mean loss: 14.263936
+segmentation accuracy: 0.822211
+box IoU (ground/3D): 0.446972 / 0.388622
+box estimation accuracy (IoU=0.7): 0.078125
+ -- 770 / 2295 --
+mean loss: 13.247383
+segmentation accuracy: 0.837595
+box IoU (ground/3D): 0.473586 / 0.416120
+box estimation accuracy (IoU=0.7): 0.103125
+ -- 780 / 2295 --
+mean loss: 15.105132
+segmentation accuracy: 0.847586
+box IoU (ground/3D): 0.460387 / 0.401783
+box estimation accuracy (IoU=0.7): 0.103125
+ -- 790 / 2295 --
+mean loss: 12.530943
+segmentation accuracy: 0.844775
+box IoU (ground/3D): 0.465852 / 0.405591
+box estimation accuracy (IoU=0.7): 0.075000
+ -- 800 / 2295 --
+mean loss: 18.011446
+segmentation accuracy: 0.834341
+box IoU (ground/3D): 0.450082 / 0.388429
+box estimation accuracy (IoU=0.7): 0.046875
+ -- 810 / 2295 --
+mean loss: 15.813059
+segmentation accuracy: 0.836273
+box IoU (ground/3D): 0.457247 / 0.392691
+box estimation accuracy (IoU=0.7): 0.093750
+ -- 820 / 2295 --
+mean loss: 12.715129
+segmentation accuracy: 0.816251
+box IoU (ground/3D): 0.475658 / 0.421075
+box estimation accuracy (IoU=0.7): 0.128125
+ -- 830 / 2295 --
+mean loss: 11.614677
+segmentation accuracy: 0.844147
+box IoU (ground/3D): 0.474926 / 0.419767
+box estimation accuracy (IoU=0.7): 0.106250
+ -- 840 / 2295 --
+mean loss: 16.615898
+segmentation accuracy: 0.810895
+box IoU (ground/3D): 0.460562 / 0.402067
+box estimation accuracy (IoU=0.7): 0.096875
+ -- 850 / 2295 --
+mean loss: 17.185535
+segmentation accuracy: 0.825797
+box IoU (ground/3D): 0.449997 / 0.391227
+box estimation accuracy (IoU=0.7): 0.071875
+ -- 860 / 2295 --
+mean loss: 12.485925
+segmentation accuracy: 0.838589
+box IoU (ground/3D): 0.440504 / 0.386399
+box estimation accuracy (IoU=0.7): 0.109375
+ -- 870 / 2295 --
+mean loss: 12.626655
+segmentation accuracy: 0.837891
+box IoU (ground/3D): 0.476696 / 0.414365
+box estimation accuracy (IoU=0.7): 0.096875
+ -- 880 / 2295 --
+mean loss: 13.793738
+segmentation accuracy: 0.838434
+box IoU (ground/3D): 0.461752 / 0.398288
+box estimation accuracy (IoU=0.7): 0.093750
+ -- 890 / 2295 --
+mean loss: 15.941955
+segmentation accuracy: 0.819852
+box IoU (ground/3D): 0.430309 / 0.369861
+box estimation accuracy (IoU=0.7): 0.050000
+ -- 900 / 2295 --
+mean loss: 11.883037
+segmentation accuracy: 0.849384
+box IoU (ground/3D): 0.479429 / 0.424640
+box estimation accuracy (IoU=0.7): 0.125000
+ -- 910 / 2295 --
+mean loss: 11.841555
+segmentation accuracy: 0.847705
+box IoU (ground/3D): 0.493733 / 0.441797
+box estimation accuracy (IoU=0.7): 0.159375
+ -- 920 / 2295 --
+mean loss: 12.880062
+segmentation accuracy: 0.829419
+box IoU (ground/3D): 0.470912 / 0.416965
+box estimation accuracy (IoU=0.7): 0.162500
+ -- 930 / 2295 --
+mean loss: 11.745204
+segmentation accuracy: 0.833661
+box IoU (ground/3D): 0.502346 / 0.439496
+box estimation accuracy (IoU=0.7): 0.115625
+ -- 940 / 2295 --
+mean loss: 11.606243
+segmentation accuracy: 0.849203
+box IoU (ground/3D): 0.487412 / 0.427355
+box estimation accuracy (IoU=0.7): 0.096875
+ -- 950 / 2295 --
+mean loss: 11.069968
+segmentation accuracy: 0.858078
+box IoU (ground/3D): 0.490220 / 0.425609
+box estimation accuracy (IoU=0.7): 0.112500
+ -- 960 / 2295 --
+mean loss: 12.267864
+segmentation accuracy: 0.848938
+box IoU (ground/3D): 0.469897 / 0.414149
+box estimation accuracy (IoU=0.7): 0.078125
+ -- 970 / 2295 --
+mean loss: 10.410057
+segmentation accuracy: 0.852951
+box IoU (ground/3D): 0.503489 / 0.449955
+box estimation accuracy (IoU=0.7): 0.156250
+ -- 980 / 2295 --
+mean loss: 12.493994
+segmentation accuracy: 0.856781
+box IoU (ground/3D): 0.499280 / 0.442104
+box estimation accuracy (IoU=0.7): 0.118750
+ -- 990 / 2295 --
+mean loss: 14.004690
+segmentation accuracy: 0.839127
+box IoU (ground/3D): 0.449010 / 0.397302
+box estimation accuracy (IoU=0.7): 0.100000
+ -- 1000 / 2295 --
+mean loss: 11.444920
+segmentation accuracy: 0.846045
+box IoU (ground/3D): 0.472877 / 0.418846
+box estimation accuracy (IoU=0.7): 0.103125
+ -- 1010 / 2295 --
+mean loss: 13.859466
+segmentation accuracy: 0.840091
+box IoU (ground/3D): 0.448443 / 0.402430
+box estimation accuracy (IoU=0.7): 0.096875
+ -- 1020 / 2295 --
+mean loss: 11.092631
+segmentation accuracy: 0.832950
+box IoU (ground/3D): 0.483134 / 0.425989
+box estimation accuracy (IoU=0.7): 0.106250
+ -- 1030 / 2295 --
+mean loss: 16.210887
+segmentation accuracy: 0.822260
+box IoU (ground/3D): 0.425216 / 0.379396
+box estimation accuracy (IoU=0.7): 0.134375
+ -- 1040 / 2295 --
+mean loss: 16.080595
+segmentation accuracy: 0.833942
+box IoU (ground/3D): 0.478536 / 0.419059
+box estimation accuracy (IoU=0.7): 0.100000
+ -- 1050 / 2295 --
+mean loss: 10.781530
+segmentation accuracy: 0.844708
+box IoU (ground/3D): 0.472719 / 0.416905
+box estimation accuracy (IoU=0.7): 0.137500
+ -- 1060 / 2295 --
+mean loss: 13.560853
+segmentation accuracy: 0.847467
+box IoU (ground/3D): 0.457984 / 0.402301
+box estimation accuracy (IoU=0.7): 0.084375
+ -- 1070 / 2295 --
+mean loss: 11.759854
+segmentation accuracy: 0.847357
+box IoU (ground/3D): 0.507137 / 0.444069
+box estimation accuracy (IoU=0.7): 0.159375
+ -- 1080 / 2295 --
+mean loss: 11.819538
+segmentation accuracy: 0.833521
+box IoU (ground/3D): 0.490947 / 0.428622
+box estimation accuracy (IoU=0.7): 0.106250
+ -- 1090 / 2295 --
+mean loss: 15.844328
+segmentation accuracy: 0.824991
+box IoU (ground/3D): 0.412758 / 0.366050
+box estimation accuracy (IoU=0.7): 0.100000
+ -- 1100 / 2295 --
+mean loss: 9.861286
+segmentation accuracy: 0.857608
+box IoU (ground/3D): 0.495806 / 0.441026
+box estimation accuracy (IoU=0.7): 0.118750
+ -- 1110 / 2295 --
+mean loss: 13.485911
+segmentation accuracy: 0.849872
+box IoU (ground/3D): 0.475550 / 0.424549
+box estimation accuracy (IoU=0.7): 0.143750
+ -- 1120 / 2295 --
+mean loss: 14.784735
+segmentation accuracy: 0.841437
+box IoU (ground/3D): 0.483611 / 0.433751
+box estimation accuracy (IoU=0.7): 0.146875
+ -- 1130 / 2295 --
+mean loss: 12.172391
+segmentation accuracy: 0.839056
+box IoU (ground/3D): 0.481708 / 0.431701
+box estimation accuracy (IoU=0.7): 0.146875
+ -- 1140 / 2295 --
+mean loss: 13.235872
+segmentation accuracy: 0.843927
+box IoU (ground/3D): 0.474891 / 0.421388
+box estimation accuracy (IoU=0.7): 0.112500
+ -- 1150 / 2295 --
+mean loss: 13.567738
+segmentation accuracy: 0.826855
+box IoU (ground/3D): 0.448828 / 0.394433
+box estimation accuracy (IoU=0.7): 0.109375
+ -- 1160 / 2295 --
+mean loss: 12.336496
+segmentation accuracy: 0.830011
+box IoU (ground/3D): 0.483987 / 0.431088
+box estimation accuracy (IoU=0.7): 0.103125
+ -- 1170 / 2295 --
+mean loss: 11.383153
+segmentation accuracy: 0.848236
+box IoU (ground/3D): 0.529706 / 0.470731
+box estimation accuracy (IoU=0.7): 0.159375
+ -- 1180 / 2295 --
+mean loss: 14.485933
+segmentation accuracy: 0.843274
+box IoU (ground/3D): 0.451009 / 0.401185
+box estimation accuracy (IoU=0.7): 0.075000
+ -- 1190 / 2295 --
+mean loss: 14.354198
+segmentation accuracy: 0.849271
+box IoU (ground/3D): 0.442122 / 0.391552
+box estimation accuracy (IoU=0.7): 0.075000
+ -- 1200 / 2295 --
+mean loss: 12.955076
+segmentation accuracy: 0.836230
+box IoU (ground/3D): 0.476861 / 0.417039
+box estimation accuracy (IoU=0.7): 0.115625
+ -- 1210 / 2295 --
+mean loss: 12.714501
+segmentation accuracy: 0.856079
+box IoU (ground/3D): 0.474798 / 0.427767
+box estimation accuracy (IoU=0.7): 0.137500
+ -- 1220 / 2295 --
+mean loss: 13.710371
+segmentation accuracy: 0.838821
+box IoU (ground/3D): 0.483962 / 0.431716
+box estimation accuracy (IoU=0.7): 0.181250
+ -- 1230 / 2295 --
+mean loss: 16.462784
+segmentation accuracy: 0.835257
+box IoU (ground/3D): 0.481298 / 0.423947
+box estimation accuracy (IoU=0.7): 0.143750
+ -- 1240 / 2295 --
+mean loss: 11.149280
+segmentation accuracy: 0.840121
+box IoU (ground/3D): 0.477838 / 0.413883
+box estimation accuracy (IoU=0.7): 0.090625
+ -- 1250 / 2295 --
+mean loss: 13.436051
+segmentation accuracy: 0.834219
+box IoU (ground/3D): 0.478944 / 0.417871
+box estimation accuracy (IoU=0.7): 0.112500
+ -- 1260 / 2295 --
+mean loss: 12.421791
+segmentation accuracy: 0.847058
+box IoU (ground/3D): 0.508277 / 0.447665
+box estimation accuracy (IoU=0.7): 0.156250
+ -- 1270 / 2295 --
+mean loss: 11.542775
+segmentation accuracy: 0.848663
+box IoU (ground/3D): 0.459151 / 0.406711
+box estimation accuracy (IoU=0.7): 0.087500
+ -- 1280 / 2295 --
+mean loss: 13.449036
+segmentation accuracy: 0.851837
+box IoU (ground/3D): 0.467057 / 0.415630
+box estimation accuracy (IoU=0.7): 0.115625
+ -- 1290 / 2295 --
+mean loss: 12.170096
+segmentation accuracy: 0.841620
+box IoU (ground/3D): 0.467046 / 0.421565
+box estimation accuracy (IoU=0.7): 0.150000
+ -- 1300 / 2295 --
+mean loss: 11.711550
+segmentation accuracy: 0.845172
+box IoU (ground/3D): 0.447142 / 0.396557
+box estimation accuracy (IoU=0.7): 0.090625
+ -- 1310 / 2295 --
+mean loss: 13.942309
+segmentation accuracy: 0.842126
+box IoU (ground/3D): 0.490553 / 0.436752
+box estimation accuracy (IoU=0.7): 0.153125
+ -- 1320 / 2295 --
+mean loss: 9.632144
+segmentation accuracy: 0.859824
+box IoU (ground/3D): 0.530208 / 0.472494
+box estimation accuracy (IoU=0.7): 0.153125
+ -- 1330 / 2295 --
+mean loss: 11.068098
+segmentation accuracy: 0.838141
+box IoU (ground/3D): 0.494024 / 0.441642
+box estimation accuracy (IoU=0.7): 0.128125
+ -- 1340 / 2295 --
+mean loss: 11.632762
+segmentation accuracy: 0.846985
+box IoU (ground/3D): 0.519060 / 0.457760
+box estimation accuracy (IoU=0.7): 0.150000
+ -- 1350 / 2295 --
+mean loss: 14.755258
+segmentation accuracy: 0.851636
+box IoU (ground/3D): 0.480549 / 0.426962
+box estimation accuracy (IoU=0.7): 0.171875
+ -- 1360 / 2295 --
+mean loss: 11.172506
+segmentation accuracy: 0.852856
+box IoU (ground/3D): 0.505920 / 0.451915
+box estimation accuracy (IoU=0.7): 0.175000
+ -- 1370 / 2295 --
+mean loss: 10.233264
+segmentation accuracy: 0.845807
+box IoU (ground/3D): 0.496707 / 0.433536
+box estimation accuracy (IoU=0.7): 0.131250
+ -- 1380 / 2295 --
+mean loss: 12.908735
+segmentation accuracy: 0.840247
+box IoU (ground/3D): 0.481716 / 0.415980
+box estimation accuracy (IoU=0.7): 0.081250
+ -- 1390 / 2295 --
+mean loss: 13.156522
+segmentation accuracy: 0.826288
+box IoU (ground/3D): 0.491943 / 0.428206
+box estimation accuracy (IoU=0.7): 0.106250
+ -- 1400 / 2295 --
+mean loss: 11.686029
+segmentation accuracy: 0.840518
+box IoU (ground/3D): 0.500212 / 0.441203
+box estimation accuracy (IoU=0.7): 0.140625
+ -- 1410 / 2295 --
+mean loss: 10.923944
+segmentation accuracy: 0.837863
+box IoU (ground/3D): 0.496723 / 0.426583
+box estimation accuracy (IoU=0.7): 0.125000
+ -- 1420 / 2295 --
+mean loss: 9.547925
+segmentation accuracy: 0.864658
+box IoU (ground/3D): 0.537206 / 0.471441
+box estimation accuracy (IoU=0.7): 0.118750
+ -- 1430 / 2295 --
+mean loss: 8.760962
+segmentation accuracy: 0.848611
+box IoU (ground/3D): 0.526785 / 0.471272
+box estimation accuracy (IoU=0.7): 0.187500
+ -- 1440 / 2295 --
+mean loss: 11.603930
+segmentation accuracy: 0.853131
+box IoU (ground/3D): 0.510735 / 0.451912
+box estimation accuracy (IoU=0.7): 0.140625
+ -- 1450 / 2295 --
+mean loss: 11.971923
+segmentation accuracy: 0.857556
+box IoU (ground/3D): 0.496362 / 0.443862
+box estimation accuracy (IoU=0.7): 0.140625
+ -- 1460 / 2295 --
+mean loss: 11.563357
+segmentation accuracy: 0.842743
+box IoU (ground/3D): 0.520526 / 0.464000
+box estimation accuracy (IoU=0.7): 0.165625
+ -- 1470 / 2295 --
+mean loss: 11.019398
+segmentation accuracy: 0.850549
+box IoU (ground/3D): 0.516251 / 0.454655
+box estimation accuracy (IoU=0.7): 0.159375
+ -- 1480 / 2295 --
+mean loss: 10.098816
+segmentation accuracy: 0.865805
+box IoU (ground/3D): 0.544187 / 0.482970
+box estimation accuracy (IoU=0.7): 0.162500
+ -- 1490 / 2295 --
+mean loss: 9.928708
+segmentation accuracy: 0.860760
+box IoU (ground/3D): 0.530473 / 0.467796
+box estimation accuracy (IoU=0.7): 0.137500
+ -- 1500 / 2295 --
+mean loss: 11.575964
+segmentation accuracy: 0.847763
+box IoU (ground/3D): 0.509732 / 0.453979
+box estimation accuracy (IoU=0.7): 0.146875
+ -- 1510 / 2295 --
+mean loss: 9.129142
+segmentation accuracy: 0.853281
+box IoU (ground/3D): 0.552696 / 0.493152
+box estimation accuracy (IoU=0.7): 0.196875
+ -- 1520 / 2295 --
+mean loss: 10.500252
+segmentation accuracy: 0.850742
+box IoU (ground/3D): 0.491084 / 0.435946
+box estimation accuracy (IoU=0.7): 0.143750
+ -- 1530 / 2295 --
+mean loss: 13.986286
+segmentation accuracy: 0.844025
+box IoU (ground/3D): 0.463052 / 0.413839
+box estimation accuracy (IoU=0.7): 0.084375
+ -- 1540 / 2295 --
+mean loss: 14.041737
+segmentation accuracy: 0.859723
+box IoU (ground/3D): 0.480519 / 0.420734
+box estimation accuracy (IoU=0.7): 0.100000
+ -- 1550 / 2295 --
+mean loss: 11.136291
+segmentation accuracy: 0.859412
+box IoU (ground/3D): 0.504942 / 0.444580
+box estimation accuracy (IoU=0.7): 0.128125
+ -- 1560 / 2295 --
+mean loss: 12.645131
+segmentation accuracy: 0.845477
+box IoU (ground/3D): 0.482187 / 0.432421
+box estimation accuracy (IoU=0.7): 0.125000
+ -- 1570 / 2295 --
+mean loss: 15.872975
+segmentation accuracy: 0.860220
+box IoU (ground/3D): 0.474996 / 0.419626
+box estimation accuracy (IoU=0.7): 0.084375
+ -- 1580 / 2295 --
+mean loss: 12.731031
+segmentation accuracy: 0.848740
+box IoU (ground/3D): 0.492206 / 0.435500
+box estimation accuracy (IoU=0.7): 0.150000
+ -- 1590 / 2295 --
+mean loss: 10.709052
+segmentation accuracy: 0.861383
+box IoU (ground/3D): 0.504384 / 0.447093
+box estimation accuracy (IoU=0.7): 0.137500
+ -- 1600 / 2295 --
+mean loss: 11.784011
+segmentation accuracy: 0.865680
+box IoU (ground/3D): 0.489905 / 0.438589
+box estimation accuracy (IoU=0.7): 0.156250
+ -- 1610 / 2295 --
+mean loss: 10.861463
+segmentation accuracy: 0.859482
+box IoU (ground/3D): 0.512429 / 0.455861
+box estimation accuracy (IoU=0.7): 0.134375
+ -- 1620 / 2295 --
+mean loss: 9.335085
+segmentation accuracy: 0.861926
+box IoU (ground/3D): 0.525775 / 0.469581
+box estimation accuracy (IoU=0.7): 0.159375

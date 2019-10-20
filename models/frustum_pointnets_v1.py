@@ -111,17 +111,43 @@ def get_3d_box_estimation_v1_net(object_point_cloud, one_hot_vec,
     channels =  object_point_cloud.get_shape()[2].value
     #识别 dimension, center
     net0=object_point_cloud
-    result_features=[]
-    for i in range(batch_size):
-        print("batch="+str(i)+"#####################################################")
-        for j in range(num_point):
-            print("num_point="+str(j)+"#####################################################")
-            feature =  tf.slice(net0, [0+i,0+j,0], [1,1,channels]) # (N,1)
-            feature =tf.norm(tf.squeeze(feature,axis=0))
-            feature = extract_h2_features(tf.expand_dims(feature,axis=0),'extract_h2','extractor')
-            result_features.append(feature)
+    result_feature = tf.TensorArray(size=0 , dtype=tf.float32, dynamic_size=True)
+
+
+    def cond_nump(batch,num,num_points,n, channels,result_feature,net0):
+        return num<num_points
+
+    def body_nump(batch,num,num_points,n, channels,result_feature,net0):
+        print("#################################",num)
+        feature = tf.slice(net0, [0+batch,0+num,0], [1,1,channels])
+        feature = tf.norm(tf.squeeze(feature, axis=0))
+        feature = extract_h2_features(tf.expand_dims(feature, axis=0), 'extract_h2', 'extractor',[4,16,32,16,channels])
+        result_feature=result_feature.write(n, feature)
+        return batch, num + 1, num_points,n + 1,channels, result_feature, net0
+
+    def cond_batch(batch,batch_size,num_points,n,channels,result_feature,net0):
+        return batch<batch_size
+
+    def body_batch(batch, batch_size, num_points, n, channels, result_feature, net0):
+        print("#################################", batch)
+        batch,num,num_points,n, channels,result_feature,net0=tf.while_loop(cond_nump, body_nump, [batch,0,num_points,n,channels,result_feature,net0])
+        return batch+1,batch_size,num_points,n,channels,result_feature,net0
+
+    _, _, _, _, _, result_feature, _= tf.while_loop(cond_batch,body_batch,[0, batch_size, num_point, 0, channels, result_feature, net0])
+    net0 = tf.reshape(result_feature.stack(),[batch_size,num_point,channels])
+    print(net0.get_shape().as_list(),"############################################################")
+
+    # result_feature=[]
+    # for i in range(batch_size):
+    #     print("batch="+str(i)+"#####################################################")
+    #     for j in range(num_point):
+    #         print("num_point="+str(j)+"#####################################################")
+    #         feature =  tf.slice(net0, [0+i,0+j,0], [1,1,channels]) # (N,1)
+    #         feature =tf.norm(tf.squeeze(feature,axis=0))
+    #         feature = extract_h2_features(tf.expand_dims(feature,axis=0),'extract_h2','extractor')
+    #         result_feature.append(feature)
     print('阶段1###########################################################################')
-    net0= tf.reshape(tf.concat(result_features,axis=0),[batch_size,num_point,-1])
+    # net0= tf.reshape(tf.concat(result_feature,axis=0),[batch_size,num_point,-1])
     print('阶段2###########################################################################')
     net0 = tf.expand_dims( net0, 2)
     print(net0.get_shape().as_list(),'######################################################')
@@ -149,12 +175,12 @@ def get_3d_box_estimation_v1_net(object_point_cloud, one_hot_vec,
                                   is_training=is_training, bn_decay=bn_decay)
     net0 = tf_util.fully_connected(net0, 256, scope='fc2_s', bn=True,
                                   is_training=is_training, bn_decay=bn_decay)
-    output_size_center = tf_util.fully_connected(net0,
-                                             3 + NUM_SIZE_CLUSTER * 4, activation_fn=None,
+    output_size = tf_util.fully_connected(net0,
+                                             NUM_SIZE_CLUSTER * 4, activation_fn=None,
                                              scope='fc3_s')
 
-    output_center = tf.slice(  output_size_center , [0,0], [-1,3])
-    output_size =  tf.slice(  output_size_center , [0,3], [-1,NUM_SIZE_CLUSTER * 4])
+    # output_center = tf.slice(  output_size_center , [0,0], [-1,3])
+    # output_size =  tf.slice(  output_size_center , [0,3], [-1,NUM_SIZE_CLUSTER * 4])
     print('阶段3###########################################################################')
     net = tf.expand_dims(object_point_cloud, 2)
     net = tf_util.conv2d(net, 128, [1,1],
@@ -185,9 +211,9 @@ def get_3d_box_estimation_v1_net(object_point_cloud, one_hot_vec,
     # The first 3 numbers: box center coordinates (cx,cy,cz),
     # the next NUM_HEADING_BIN*2:  heading bin class scores and bin residuals
     # next NUM_SIZE_CLUSTER*4: box cluster scores and residuals
-    output_heading = tf_util.fully_connected(net,
-        NUM_HEADING_BIN*2, activation_fn=None, scope='fc3_h')
-    output = tf.concat([output_center,output_heading,output_size],axis=-1)
+    output_center_heading = tf_util.fully_connected(net,
+        3+NUM_HEADING_BIN*2, activation_fn=None, scope='fc3_h')
+    output = tf.concat([output_center_heading,output_size],axis=-1)
     print('阶段4###########################################################################')
     return  output,end_points
 
@@ -244,8 +270,11 @@ def get_model(point_cloud, one_hot_vec, is_training, bn_decay=None):
 
 if __name__=='__main__':
     with tf.Graph().as_default():
+
         inputs = tf.zeros((32,1024,4))
         outputs = get_model(inputs, tf.ones((32,3)), tf.constant(True))
+        variable_names = [v.name for v in tf.trainable_variables()]
+        print(variable_names)
         for key in outputs:
             print((key, outputs[key]))
         loss = get_loss(tf.zeros((32,1024),dtype=tf.int32),
