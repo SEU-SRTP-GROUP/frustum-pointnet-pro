@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ed63ab91-08f3-4c44-b333-384fa6bbd184" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/models/test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/frustum_pointnets_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/frustum_pointnets_v1.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/model_util.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/model_util.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -113,6 +113,7 @@
       <workItem from="1571399320085" duration="12470000" />
       <workItem from="1571553106155" duration="8998000" />
       <workItem from="1571573058874" duration="557000" />
+      <workItem from="1571573689463" duration="8592000" />
     </task>
     <servers />
   </component>
@@ -133,7 +134,7 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/frustum_pointnet_pro$test.coverage" NAME="test Coverage Results" MODIFIED="1571572487155" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models" />
+    <SUITE FILE_PATH="coverage/frustum_pointnet_pro$test.coverage" NAME="test Coverage Results" MODIFIED="1571584102493" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models" />
     <SUITE FILE_PATH="coverage/frustum_pointnet_pro$frustum_pointnets_v1.coverage" NAME="frustum_pointnets_v1 Coverage Results" MODIFIED="1571410347430" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models" />
   </component>
 </project>

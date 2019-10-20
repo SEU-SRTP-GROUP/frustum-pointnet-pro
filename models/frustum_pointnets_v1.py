@@ -114,27 +114,38 @@ def get_3d_box_estimation_v1_net(object_point_cloud, one_hot_vec,
     result_feature = tf.TensorArray(size=0 , dtype=tf.float32, dynamic_size=True)
 
 
-    def cond_nump(batch,num,num_points,n, channels,result_feature,net0):
+    # def cond_nump(batch,num,num_points,n, channels,result_feature,net0):
+    #     return num<num_points
+    #
+    # def body_nump(batch,num,num_points,n, channels,result_feature,net0):
+    #     print("#################################",num)
+    #     feature = tf.slice(net0, [0+batch,0+num,0], [1,1,channels])
+    #     feature = tf.norm(tf.squeeze(feature, axis=0))
+    #     feature = extract_h2_features(tf.expand_dims(feature, axis=0), 'extract_h2', 'extractor',[4,16,32,16,channels])
+    #     result_feature=result_feature.write(n, feature)
+    #     return batch, num + 1, num_points,n + 1,channels, result_feature, net0
+    #
+    # def cond_batch(batch,batch_size,num_points,n,channels,result_feature,net0):
+    #     return batch<batch_size
+    #
+    # def body_batch(batch, batch_size, num_points, n, channels, result_feature, net0):
+    #     print("#################################", batch)
+    #     batch,num,num_points,n, channels,result_feature,net0=tf.while_loop(cond_nump, body_nump, [batch,0,num_points,n,channels,result_feature,net0])
+    #     return batch+1,batch_size,num_points,n,channels,result_feature,net0
+    #
+    # _, _, _, _, _, result_feature, _= tf.while_loop(cond_batch,body_batch,[0, batch_size, num_point, 0, channels, result_feature, net0])
+    def cond_num(num,num_points,channels,result_feature,net0):
         return num<num_points
+    def body_num(num,num_points,channels,result_feature,net0):
+        feature = tf.slice(net0,[0,0+num,0],[-1,1,channels])  #[batch,1,3]
+        feature =tf.norm(feature,axis=2)   #[batch,1]
+        feature = extract_h2_features(feature,'extract_h2','extractor',[4,16,32,16,3])   # [batch,channels]
+        result_feature = result_feature.write(num, feature)
+        return num+1,num_points,channels,result_feature,net0
 
-    def body_nump(batch,num,num_points,n, channels,result_feature,net0):
-        print("#################################",num)
-        feature = tf.slice(net0, [0+batch,0+num,0], [1,1,channels])
-        feature = tf.norm(tf.squeeze(feature, axis=0))
-        feature = extract_h2_features(tf.expand_dims(feature, axis=0), 'extract_h2', 'extractor',[4,16,32,16,channels])
-        result_feature=result_feature.write(n, feature)
-        return batch, num + 1, num_points,n + 1,channels, result_feature, net0
-
-    def cond_batch(batch,batch_size,num_points,n,channels,result_feature,net0):
-        return batch<batch_size
-
-    def body_batch(batch, batch_size, num_points, n, channels, result_feature, net0):
-        print("#################################", batch)
-        batch,num,num_points,n, channels,result_feature,net0=tf.while_loop(cond_nump, body_nump, [batch,0,num_points,n,channels,result_feature,net0])
-        return batch+1,batch_size,num_points,n,channels,result_feature,net0
-
-    _, _, _, _, _, result_feature, _= tf.while_loop(cond_batch,body_batch,[0, batch_size, num_point, 0, channels, result_feature, net0])
-    net0 = tf.reshape(result_feature.stack(),[batch_size,num_point,channels])
+    _,_,_,result_feature,_=tf.while_loop(cond_num,body_num,[0,num_point,channels,result_feature,net0])
+    net0 = tf.transpose(result_feature.stack(),[1,0,2])   # result_feature.stack() (num_point,batch,channels) 所以需要转置
+    net0=   tf.reshape( net0,[batch_size,num_point,channels])
     print(net0.get_shape().as_list(),"############################################################")
 
     # result_feature=[]
