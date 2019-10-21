@@ -134,14 +134,34 @@ def get_3d_box_estimation_v1_net(object_point_cloud, one_hot_vec,
     #     return batch+1,batch_size,num_points,n,channels,result_feature,net0
     #
     # _, _, _, _, _, result_feature, _= tf.while_loop(cond_batch,body_batch,[0, batch_size, num_point, 0, channels, result_feature, net0])
-    def cond_num(num,num_points,channels,result_feature,net0):
-        return num<num_points
-    def body_num(num,num_points,channels,result_feature,net0):
-        feature = tf.slice(net0,[0,0+num,0],[-1,1,channels])  #[batch,1,3]
-        feature =tf.norm(feature,axis=2)   #[batch,1]
-        feature = extract_h2_features(feature,'extract_h2','extractor',[4,16,32,16,3])   # [batch,channels]
+    def cond_num(num,num_point,channels,result_feature,net0):
+        return num<num_point
+    def body_num(num,num_point,channels,result_feature,net0):
+        feature_abc=[]
+        if num_point-num < 3 :
+            feature_abc=tf.slice(net0, [0, 0+num, 0], [-1, 1, channels])
+            feature_abc = tf.norm(feature_abc, axis=2)
+            feature = extract_h2_features(feature_abc, 'extract_h1', 'extractor', [4, 16, 32, 16, 3])
+        else:
+            feature_a = tf.slice(net0, [0, 0+num, 0], [-1, 1, channels])  #[batch,1,3]
+            feature_a = tf.norm(feature_a, axis=2)   #[batch,1]
+            feature_b = tf.slice(net0, [0, 0+num+1, 0], [-1, 1, channels])  # [batch,1,3]
+            feature_b = tf.norm(feature_b, axis=2)  # [batch,1]
+            feature_c = tf.slice(net0, [0, 0+num+2, 0], [-1, 1, channels])  # [batch,1,3]
+            feature_c = tf.norm(feature_c, axis=2)  # [batch,1]
+            h_ab = tf.norm(feature_a - feature_b, axis=2)
+            h_bc = tf.norm(feature_b - feature_c, axis=2)
+            h_ca = tf.norm(feature_c - feature_a, axis=2)
+            feature_abc = feature_abc.write(0, feature_a)
+            feature_abc = feature_abc.write(1, h_ab)
+            feature_abc = feature_abc.write(2, feature_b)
+            feature_abc = feature_abc.write(3, h_bc)
+            feature_abc = feature_abc.write(4, feature_c)
+            feature_abc = feature_abc.write(5, h_ca)
+            feature = extract_h2_features(feature_abc,'extract_h2','extractor',[16,32,64,32,9])   # [batch,channels]
         result_feature = result_feature.write(num, feature)
-        return num+1,num_points,channels,result_feature,net0
+
+        return num+3,num_point,channels,result_feature,net0
 
     _,_,_,result_feature,_=tf.while_loop(cond_num,body_num,[0,num_point,channels,result_feature,net0])
     net0 = tf.transpose(result_feature.stack(),[1,0,2])   # result_feature.stack() (num_point,batch,channels) 所以需要转置
