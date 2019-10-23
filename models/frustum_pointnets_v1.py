@@ -14,7 +14,7 @@ import tf_util
 from model_util import NUM_HEADING_BIN, NUM_SIZE_CLUSTER, NUM_OBJECT_POINT
 from model_util import point_cloud_masking, get_center_regression_net
 from model_util import placeholder_inputs, parse_output_to_tensors, get_loss
-from model_util import extract_h2_features
+from model_util import  extract_tetrahedron_features
 def get_instance_seg_v1_net(point_cloud, one_hot_vec,
                             is_training, bn_decay, end_points):
     ''' 3D instance segmentation PointNet v1 network.
@@ -102,8 +102,8 @@ def get_3d_box_estimation_v1_net(object_point_cloud, one_hot_vec,
             and size cluster scores and residuals
     '''
     '''
-    这里对原本的网络进行修改，为了更好地是西安学习shape,我们将对每一个point求其对与中心点的 二范数，然后用一个MLP提取其特征，特征为（1，3）最后将所有的特征整合成为一张特征图
-    再送到网络里去
+    这里 我们首先提取空间特征 ： 四面体特征，计算空间上相邻（已经提前按照点云之间的距离对点云进行排序）的 3个点 和 中心点 构成的 四面体（也可能是平面 或者直线）的6条边
+    的 二范数 组成一个 vector,将这个 vector送到MLP中提取出特征，最后将这些特征组合成一张特征图送到卷积神经网络中。
     '''
     num_point = object_point_cloud.get_shape()[1].value
 
@@ -114,32 +114,21 @@ def get_3d_box_estimation_v1_net(object_point_cloud, one_hot_vec,
     result_feature = tf.TensorArray(size=0 , dtype=tf.float32, dynamic_size=True)
 
 
-    # def cond_nump(batch,num,num_points,n, channels,result_feature,net0):
-    #     return num<num_points
-    #
-    # def body_nump(batch,num,num_points,n, channels,result_feature,net0):
-    #     print("#################################",num)
-    #     feature = tf.slice(net0, [0+batch,0+num,0], [1,1,channels])
-    #     feature = tf.norm(tf.squeeze(feature, axis=0))
-    #     feature = extract_h2_features(tf.expand_dims(feature, axis=0), 'extract_h2', 'extractor',[4,16,32,16,channels])
-    #     result_feature=result_feature.write(n, feature)
-    #     return batch, num + 1, num_points,n + 1,channels, result_feature, net0
-    #
-    # def cond_batch(batch,batch_size,num_points,n,channels,result_feature,net0):
-    #     return batch<batch_size
-    #
-    # def body_batch(batch, batch_size, num_points, n, channels, result_feature, net0):
-    #     print("#################################", batch)
-    #     batch,num,num_points,n, channels,result_feature,net0=tf.while_loop(cond_nump, body_nump, [batch,0,num_points,n,channels,result_feature,net0])
-    #     return batch+1,batch_size,num_points,n,channels,result_feature,net0
-    #
-    # _, _, _, _, _, result_feature, _= tf.while_loop(cond_batch,body_batch,[0, batch_size, num_point, 0, channels, result_feature, net0])
     def cond_num(num,num_points,channels,result_feature,net0):
-        return num<num_points
+        return num<num_points-1
+
     def body_num(num,num_points,channels,result_feature,net0):
-        feature = tf.slice(net0,[0,0+num,0],[-1,1,channels])  #[batch,1,3]
-        feature =tf.norm(feature,axis=2)   #[batch,1]
-        feature = extract_h2_features(feature,'extract_h2','extractor',[4,16,32,16,3])   # [batch,channels]
+        n0 = tf.slice(net0,[0,0+num-1,0],[-1,1,channels])   #[batch,1,3]
+        n1= tf.slice(net0, [0, 0 + num , 0], [-1, 1, channels])
+        n2 = tf.slice(net0, [0, 0 + num, 0], [-1, 1, channels])
+        feature_center0 = tf.norm(n0,axis=2)  #[batch,1]
+        feature_center1 =  tf.norm(n1,axis=2)
+        feature_center2 = tf.norm(n2, axis=2)
+        feature_point0= tf.norm(tf.math.subtract(n0,n1), axis=2)   #[batch,1]
+        feature_point1 = tf.norm(tf.math.subtract(n0, n2), axis=2)
+        feature_point2 = tf.norm(tf.math.subtract(n1, n2), axis=2)
+        feature = tf.concat([feature_center0,feature_center1,feature_center2,feature_point0,feature_point1,feature_point2],axis=-1 )  #[batch,6]
+        feature = extract_tetrahedron_features(feature,'extract_h2','extractor',[6,12,24,6,3])   # [batch,channels]
         result_feature = result_feature.write(num, feature)
         return num+1,num_points,channels,result_feature,net0
 
@@ -160,26 +149,28 @@ def get_3d_box_estimation_v1_net(object_point_cloud, one_hot_vec,
     print('阶段1###########################################################################')
     # net0= tf.reshape(tf.concat(result_feature,axis=0),[batch_size,num_point,-1])
     print('阶段2###########################################################################')
-    net0 = tf.expand_dims( net0, 2)
+    net0 = tf.expand_dims( net0, 2)                 # net0 [batch,N,1,3]
     print(net0.get_shape().as_list(),'######################################################')
-    net0 = tf_util.conv2d(net0, 128, [1, 1],
-                         padding='VALID', stride=[1, 1],
+
+    # 这里对网络层的结构进行改动 ...... 卷积核采用相邻3个卷积....去除最后的池化(实验，如果恢复原来的直接看下一部分的那个...）
+    net0 = tf_util.conv2d(net0, 128, [3, 1],
+                         padding='SAME', stride=[1, 1],
                          bn=True, is_training=is_training,
                          scope='conv-reg1_s', bn_decay=bn_decay)
-    net0 = tf_util.conv2d(net0, 128, [1, 1],
-                         padding='VALID', stride=[1, 1],
+    net0 = tf_util.conv2d(net0, 128, [3, 1],
+                         padding='SMAE', stride=[1, 1],
                          bn=True, is_training=is_training,
                          scope='conv-reg2_s', bn_decay=bn_decay)
-    net0= tf_util.conv2d(net0, 256, [1, 1],
-                         padding='VALID', stride=[1, 1],
+    net0= tf_util.conv2d(net0, 256, [3, 1],
+                         padding='SAME', stride=[1, 1],
                          bn=True, is_training=is_training,
                          scope='conv-reg3_s', bn_decay=bn_decay)
-    net0 = tf_util.conv2d(net0, 512, [1, 1],
-                         padding='VALID', stride=[1, 1],
+    net0 = tf_util.conv2d(net0, 512, [3, 1],
+                         padding='SAME', stride=[1, 1],
                          bn=True, is_training=is_training,
                          scope='conv-reg4_s', bn_decay=bn_decay)
-    net0 = tf_util.max_pool2d(net0, [num_point, 1],
-                             padding='VALID', scope='maxpool2_s')
+    # net0 = tf_util.max_pool2d(net0, [num_point, 1],
+    #                          padding='VALID', scope='maxpool2_s')
     net0 = tf.squeeze(net0, axis=[1, 2])
     net0 = tf.concat([net0, one_hot_vec], axis=1)
     net0 = tf_util.fully_connected(net0, 512, scope='fc1_s', bn=True,

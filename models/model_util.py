@@ -32,7 +32,7 @@ for i in range(NUM_SIZE_CLUSTER):
 ################################
 # some model functions for frustum-pointnet-pro
 ################################
-def extract_h2_features(h2,scope,name,channels=[4,16,32,16,3]):
+def  extract_tetrahedron_features(h2,scope,name,channels=[4,16,32,16,3]):
     '''
     build a 4 layers MLP to extract the feature of h2
     :param h2:   a rank1 tensor shape[batch,1] Euclidean distance between two pointnets
