@@ -115,12 +115,18 @@ def get_3d_box_estimation_v1_net(object_point_cloud, one_hot_vec,
 
 
     def cond_num(num,num_points,channels,result_feature,net0):
-        return num<num_points-1
+        return num<num_points
 
     def body_num(num,num_points,channels,result_feature,net0):
-        n0 = tf.slice(net0,[0,0+num-1,0],[-1,1,channels])   #[batch,1,3]
+        if num==0:
+            n0 =  tf.slice(net0,[0,0+num_points-1,0],[-1,1,channels])
+        else:
+            n0 = tf.slice(net0,[0,0+num-1,0],[-1,1,channels])   #[batch,1,3]
         n1= tf.slice(net0, [0, 0 + num , 0], [-1, 1, channels])
-        n2 = tf.slice(net0, [0, 0 + num, 0], [-1, 1, channels])
+        if num == num_points-1:
+            n2 = tf.slice(net0, [0, 0, 0], [-1, 1, channels])
+        else:
+            n2 = tf.slice(net0, [0, 0 + num, 0], [-1, 1, channels])
         feature_center0 = tf.norm(n0,axis=2)  #[batch,1]
         feature_center1 =  tf.norm(n1,axis=2)
         feature_center2 = tf.norm(n2, axis=2)
@@ -132,7 +138,7 @@ def get_3d_box_estimation_v1_net(object_point_cloud, one_hot_vec,
         result_feature = result_feature.write(num, feature)
         return num+1,num_points,channels,result_feature,net0
 
-    _,_,_,result_feature,_=tf.while_loop(cond_num,body_num,[0,num_point,channels,result_feature,net0])
+    _,_,_,result_feature,_=tf.while_loop(cond_num,body_num,[1,num_point,channels,result_feature,net0])
     net0 = tf.transpose(result_feature.stack(),[1,0,2])   # result_feature.stack() (num_point,batch,channels) 所以需要转置
     net0=   tf.reshape( net0,[batch_size,num_point,channels])
     print(net0.get_shape().as_list(),"############################################################")
@@ -158,7 +164,7 @@ def get_3d_box_estimation_v1_net(object_point_cloud, one_hot_vec,
                          bn=True, is_training=is_training,
                          scope='conv-reg1_s', bn_decay=bn_decay)
     net0 = tf_util.conv2d(net0, 128, [3, 1],
-                         padding='SMAE', stride=[1, 1],
+                         padding='SAME', stride=[1, 1],
                          bn=True, is_training=is_training,
                          scope='conv-reg2_s', bn_decay=bn_decay)
     net0= tf_util.conv2d(net0, 256, [3, 1],
@@ -169,8 +175,8 @@ def get_3d_box_estimation_v1_net(object_point_cloud, one_hot_vec,
                          padding='SAME', stride=[1, 1],
                          bn=True, is_training=is_training,
                          scope='conv-reg4_s', bn_decay=bn_decay)
-    # net0 = tf_util.max_pool2d(net0, [num_point, 1],
-    #                          padding='VALID', scope='maxpool2_s')
+    net0 = tf_util.max_pool2d(net0, [num_point, 1],
+                         padding='VALID', scope='maxpool2_s')
     net0 = tf.squeeze(net0, axis=[1, 2])
     net0 = tf.concat([net0, one_hot_vec], axis=1)
     net0 = tf_util.fully_connected(net0, 512, scope='fc1_s', bn=True,

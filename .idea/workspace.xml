@@ -4,6 +4,7 @@
     <list default="true" id="ed63ab91-08f3-4c44-b333-384fa6bbd184" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/frustum_pointnets_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/frustum_pointnets_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/log_train.txt" beforeDir="false" afterPath="$PROJECT_DIR$/models/log_train.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/model_util.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/model_util.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -113,7 +114,8 @@
       <workItem from="1571553106155" duration="8998000" />
       <workItem from="1571573058874" duration="557000" />
       <workItem from="1571573689463" duration="8592000" />
-      <workItem from="1571828409371" duration="333000" />
+      <workItem from="1571828409371" duration="4963000" />
+      <workItem from="1571886236853" duration="418000" />
     </task>
     <servers />
   </component>

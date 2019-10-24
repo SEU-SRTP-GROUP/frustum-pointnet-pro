@@ -32,6 +32,7 @@ for i in range(NUM_SIZE_CLUSTER):
 ################################
 # some model functions for frustum-pointnet-pro
 ################################
+
 def  extract_tetrahedron_features(h2,scope,name,channels=[4,16,32,16,3]):
     '''
     build a 4 layers MLP to extract the feature of h2
