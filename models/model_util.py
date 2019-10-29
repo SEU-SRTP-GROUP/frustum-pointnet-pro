@@ -33,7 +33,7 @@ for i in range(NUM_SIZE_CLUSTER):
 # some model functions for frustum-pointnet-pro
 ################################
 
-def  extract_tetrahedron_features(h2,scope,name,channels=[4,16,32,16,3]):
+def  extract_tetrahedron_features(h2,scope,name,channels=[4,16,32,16,3], use_bn = True,bn_decay=0.99):
     '''
     build a 4 layers MLP to extract the feature of h2
     :param h2:   a rank1 tensor shape[batch,1] Euclidean distance between two pointnets
@@ -43,7 +43,6 @@ def  extract_tetrahedron_features(h2,scope,name,channels=[4,16,32,16,3]):
     :param reuse reuse the varible with the name of scope
     :return: 1D tensor rank=1 shape=[1,channels[-1]]
     '''
-    print(channels)
     assert(len(channels)==5)
     # def full_connected(input,ouputchanels,scope,name,
     #                    activate_fn=tf.nn.relu,
@@ -89,18 +88,28 @@ def  extract_tetrahedron_features(h2,scope,name,channels=[4,16,32,16,3]):
     # feature = full_connected(feature, channels[1], scope, "feature_extract_fullc_1")
     # feature = full_connected(feature, channels[2], scope, "feature_extract_fullc_2")
     # feature = full_connected(feature, channels[3], scope, "feature_extract_fullc_3")
-    # feature = full_connected(feature, channels[4], scope, "feature_extract_fullc_4")
+    # feature = full_connected(feature, channels[4], scope, "feature_extract_fullc_4")end_points['size_scores']
     with tf.variable_scope(scope,  reuse=tf.AUTO_REUSE):
-        feature = tf.layers.dense(h2,channels[0],activation=tf.nn.relu,use_bias=True,name=name+"_fullc_0")
-        feature = tf.layers.dense(feature, channels[1], activation=tf.nn.relu, use_bias=True,
-                                  name=name + "_fullc_1")
-        feature = tf.layers.dense(feature, channels[2], activation=tf.nn.relu, use_bias=True,
-                                  name=name + "_fullc_2")
-        feature = tf.layers.dense(feature, channels[3], activation=tf.nn.relu, use_bias=True,
-                                  name=name + "_fullc_3")
-        feature = tf.layers.dense(feature, channels[4], activation=tf.nn.relu, use_bias=True,
-                                  name=name + "_fullc_4")
+        # feature = tf.layers.dense(h2,channels[0],activation=tf.nn.relu,use_bias=True,name=name+"_fullc_0")
+        # feature = tf.layers.dense(feature, channels[1], activation=tf.nn.relu, use_bias=True,
+        #                           name=name + "_fullc_1")
+        # feature = tf.layers.dense(feature, channels[2], activation=tf.nn.relu, use_bias=True,
+        #                           name=name + "_fullc_2")
+        # feature = tf.layers.dense(feature, channels[3], activation=tf.nn.relu, use_bias=True,
+        #                           name=name + "_fullc_3")
+        # feature = tf.layers.dense(feature, channels[4], activation=tf.nn.relu, use_bias=True,
+        #                           name=name + "_fullc_4")
 
+        feature= tf_util.fully_connected(h2, channels[0], scope=name+'_fullc_0', bn=bn_decay,
+                                is_training=True, bn_decay=0.99)
+        feature = tf_util.fully_connected( feature, channels[1], scope=name + '_fullc_1', bn=use_bn,
+                                         bn_decay=bn_decay, is_training=True)
+        feature = tf_util.fully_connected( feature, channels[2], scope=name + '_fullc_2', bn=use_bn,
+                                         bn_decay=bn_decay,is_training=True)
+        feature = tf_util.fully_connected( feature, channels[3], scope=name + '_fullc_3', bn=use_bn,
+                                           bn_decay=bn_decay,is_training=True)
+        feature = tf_util.fully_connected( feature, channels[4], scope=name + '_fullc_4', bn=use_bn, bn_decay=bn_decay,
+                                              is_training=True)
     return feature
 
 

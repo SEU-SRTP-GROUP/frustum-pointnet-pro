@@ -113,34 +113,44 @@ def get_3d_box_estimation_v1_net(object_point_cloud, one_hot_vec,
     net0=object_point_cloud
     result_feature = tf.TensorArray(size=0 , dtype=tf.float32, dynamic_size=True)
 
-
     def cond_num(num,num_points,channels,result_feature,net0):
         return num<num_points
 
     def body_num(num,num_points,channels,result_feature,net0):
-        if num==0:
-            n0 =  tf.slice(net0,[0,0+num_points-1,0],[-1,1,channels])
-        else:
-            n0 = tf.slice(net0,[0,0+num-1,0],[-1,1,channels])   #[batch,1,3]
+        # if num==0:
+        #     n0 =  tf.slice(net0,[0,0+num_points-1,0],[-1,1,channels])
+        # else:
+        #     n0 = tf.slice(net0,[0,0+num_points-1,0],[-1,1,channels])   #[batch,1,3]
+        n0 = tf.cond(tf.equal(num,0),
+                     lambda :tf.slice(net0,[0,0+num_points-1,0],[-1,1,channels]),lambda :tf.slice(net0,[0,0+num-1,0],[-1,1,channels]))
         n1= tf.slice(net0, [0, 0 + num , 0], [-1, 1, channels])
-        if num == num_points-1:
-            n2 = tf.slice(net0, [0, 0, 0], [-1, 1, channels])
-        else:
-            n2 = tf.slice(net0, [0, 0 + num, 0], [-1, 1, channels])
+        # if num == num_points-1:
+        #     n2 = tf.slice(net0, [0, 0, 0], [-1, 1, channels])
+        # else:
+        #     n2 = tf.slice(net0, [0, 0 + num, 0], [-1, 1, channels])
+        n2 = tf.cond(tf.equal(num, num_points-1),
+                     lambda : tf.slice(net0, [0, 0, 0], [-1, 1, channels]),
+                     lambda :tf.slice(net0, [0, 0 + num+1, 0], [-1, 1, channels]))
         feature_center0 = tf.norm(n0,axis=2)  #[batch,1]
         feature_center1 =  tf.norm(n1,axis=2)
         feature_center2 = tf.norm(n2, axis=2)
-        feature_point0= tf.norm(tf.math.subtract(n0,n1), axis=2)   #[batch,1]
-        feature_point1 = tf.norm(tf.math.subtract(n0, n2), axis=2)
-        feature_point2 = tf.norm(tf.math.subtract(n1, n2), axis=2)
+        # feature_point0= tf.norm(tf.abs(tf.math.subtract(n0,n1)), axis=2)   #[batch,1]
+        # feature_point1 = tf.norm(tf.abs(tf.math.subtract(n0,n2)), axis=2)
+        # feature_point2 = tf.norm(tf.abs(tf.math.subtract(n1,n2)), axis=2)
+        print("#############################################################", n0.get_shape().as_list())
+        feature_point0 = tf.reshape(n0,[ batch_size ,3])  # n0 [ batch,1,3]
+        print("#############################################################", feature_point0.get_shape().as_list())
+        feature_point1 = tf.reshape(n1,[ batch_size ,3])  # n0 [ batch,1,3]
+        feature_point2 = tf.reshape(n2,[ batch_size ,3])  # n0 [ batch,1,3]
         feature = tf.concat([feature_center0,feature_center1,feature_center2,feature_point0,feature_point1,feature_point2],axis=-1 )  #[batch,6]
-        feature = extract_tetrahedron_features(feature,'extract_h2','extractor',[6,12,24,6,3])   # [batch,channels]
+        feature =  extract_tetrahedron_features(feature,'extract_h2','extractor',[12,24,32,12,3])   # [batch,channels]
         result_feature = result_feature.write(num, feature)
         return num+1,num_points,channels,result_feature,net0
 
-    _,_,_,result_feature,_=tf.while_loop(cond_num,body_num,[1,num_point,channels,result_feature,net0])
+
+    _,_,_,result_feature,_=tf.while_loop(cond_num,body_num,[0,num_point,channels,result_feature,net0])
     net0 = tf.transpose(result_feature.stack(),[1,0,2])   # result_feature.stack() (num_point,batch,channels) 所以需要转置
-    net0=   tf.reshape( net0,[batch_size,num_point,channels])
+    net0=   tf.reshape( net0,[batch_size,num_point,channels],name ='net0_stage1')
     print(net0.get_shape().as_list(),"############################################################")
 
     # result_feature=[]
