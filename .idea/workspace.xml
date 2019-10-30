@@ -5,7 +5,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/frustum_pointnets_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/frustum_pointnets_v1.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/model_util.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/model_util.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/train/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/train/train.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -27,7 +26,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../mask-rcnn" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -188,7 +187,8 @@
       <workItem from="1571969266476" duration="6059000" />
       <workItem from="1572002407762" duration="1385000" />
       <workItem from="1572335595311" duration="450000" />
-      <workItem from="1572340082553" duration="5684000" />
+      <workItem from="1572340082553" duration="6939000" />
+      <workItem from="1572422150178" duration="2495000" />
     </task>
     <servers />
   </component>

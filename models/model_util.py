@@ -33,7 +33,7 @@ for i in range(NUM_SIZE_CLUSTER):
 # some model functions for frustum-pointnet-pro
 ################################
 
-def  extract_tetrahedron_features(h2,scope,name,channels=[4,16,32,16,3], use_bn = True,bn_decay=0.99):
+def enhance_features(h2,scope,name,channels=[4,8,16,32], use_bn = True,bn_decay=0.99):
     '''
     build a 4 layers MLP to extract the feature of h2
     :param h2:   a rank1 tensor shape[batch,1] Euclidean distance between two pointnets
@@ -43,7 +43,7 @@ def  extract_tetrahedron_features(h2,scope,name,channels=[4,16,32,16,3], use_bn 
     :param reuse reuse the varible with the name of scope
     :return: 1D tensor rank=1 shape=[1,channels[-1]]
     '''
-    assert(len(channels)==5)
+    assert(len(channels)==4)
     # def full_connected(input,ouputchanels,scope,name,
     #                    activate_fn=tf.nn.relu,
     #                    use_xavier=True,
@@ -108,8 +108,6 @@ def  extract_tetrahedron_features(h2,scope,name,channels=[4,16,32,16,3], use_bn 
                                          bn_decay=bn_decay,is_training=True)
         feature = tf_util.fully_connected( feature, channels[3], scope=name + '_fullc_3', bn=use_bn,
                                            bn_decay=bn_decay,is_training=True)
-        feature = tf_util.fully_connected( feature, channels[4], scope=name + '_fullc_4', bn=use_bn, bn_decay=bn_decay,
-                                              is_training=True)
     return feature
 
 

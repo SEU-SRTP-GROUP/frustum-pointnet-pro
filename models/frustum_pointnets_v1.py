@@ -14,7 +14,7 @@ import tf_util
 from model_util import NUM_HEADING_BIN, NUM_SIZE_CLUSTER, NUM_OBJECT_POINT
 from model_util import point_cloud_masking, get_center_regression_net
 from model_util import placeholder_inputs, parse_output_to_tensors, get_loss
-from model_util import  extract_tetrahedron_features
+from model_util import  enhance_features
 def get_instance_seg_v1_net(point_cloud, one_hot_vec,
                             is_training, bn_decay, end_points):
     ''' 3D instance segmentation PointNet v1 network.
@@ -102,8 +102,9 @@ def get_3d_box_estimation_v1_net(object_point_cloud, one_hot_vec,
             and size cluster scores and residuals
     '''
     '''
-    这里 我们首先提取空间特征 ： 四面体特征，计算空间上相邻（已经提前按照点云之间的距离对点云进行排序）的 3个点 和 中心点 构成的 四面体（也可能是平面 或者直线）的6条边
-    的 二范数 组成一个 vector,将这个 vector送到MLP中提取出特征，最后将这些特征组合成一张特征图送到卷积神经网络中。
+    这里我们提升rscnn的思想——特征增强，我们将一些可以从 点中提取的特征，附加到原来的特征图中，增强原始的特征，希望实现比较好的效果，在一开始进行特征增强，
+    这里先假设每次对 一个点 进行特征增强，因此满足排序无序性， 在原本的特征上增加 h 在将所有的特征送入到MLP中进行增强，从而在一定程度上确保满足点云深度学习的
+    刚体旋转不变性
     '''
     num_point = object_point_cloud.get_shape()[1].value
 
@@ -117,51 +118,21 @@ def get_3d_box_estimation_v1_net(object_point_cloud, one_hot_vec,
         return num<num_points
 
     def body_num(num,num_points,channels,result_feature,net0):
-        # if num==0:
-        #     n0 =  tf.slice(net0,[0,0+num_points-1,0],[-1,1,channels])
-        # else:
-        #     n0 = tf.slice(net0,[0,0+num_points-1,0],[-1,1,channels])   #[batch,1,3]
-        n0 = tf.cond(tf.equal(num,0),
-                     lambda :tf.slice(net0,[0,0+num_points-1,0],[-1,1,channels]),lambda :tf.slice(net0,[0,0+num-1,0],[-1,1,channels]))
-        n1= tf.slice(net0, [0, 0 + num , 0], [-1, 1, channels])
-        # if num == num_points-1:
-        #     n2 = tf.slice(net0, [0, 0, 0], [-1, 1, channels])
-        # else:
-        #     n2 = tf.slice(net0, [0, 0 + num, 0], [-1, 1, channels])
-        n2 = tf.cond(tf.equal(num, num_points-1),
-                     lambda : tf.slice(net0, [0, 0, 0], [-1, 1, channels]),
-                     lambda :tf.slice(net0, [0, 0 + num+1, 0], [-1, 1, channels]))
-        feature_center0 = tf.norm(n0,axis=2)  #[batch,1]
-        feature_center1 =  tf.norm(n1,axis=2)
-        feature_center2 = tf.norm(n2, axis=2)
-        # feature_point0= tf.norm(tf.abs(tf.math.subtract(n0,n1)), axis=2)   #[batch,1]
-        # feature_point1 = tf.norm(tf.abs(tf.math.subtract(n0,n2)), axis=2)
-        # feature_point2 = tf.norm(tf.abs(tf.math.subtract(n1,n2)), axis=2)
-        print("#############################################################", n0.get_shape().as_list())
-        feature_point0 = tf.reshape(n0,[ batch_size ,3])  # n0 [ batch,1,3]
-        print("#############################################################", feature_point0.get_shape().as_list())
-        feature_point1 = tf.reshape(n1,[ batch_size ,3])  # n0 [ batch,1,3]
-        feature_point2 = tf.reshape(n2,[ batch_size ,3])  # n0 [ batch,1,3]
-        feature = tf.concat([feature_center0,feature_center1,feature_center2,feature_point0,feature_point1,feature_point2],axis=-1 )  #[batch,6]
-        feature =  extract_tetrahedron_features(feature,'extract_h2','extractor',[12,24,32,12,3])   # [batch,channels]
+        n= tf.slice(net0, [0, 0 + num , 0], [-1, 1, channels])   # [batch,1,3]
+        feature_n_h = tf.norm(n,axis=2)                          #[batch, 1]
+        n = tf.reshape(n,[batch_size,3])                          # reshape [batch,1,3] to [batch,3]
+        feature_enhance= tf.concat([n,feature_n_h],axis=-1)             #[batch,4]
+
+        feature =  enhance_features(feature_enhance,'extract_h2','extractor',[4,8,16,32])   # [batch,channels]
         result_feature = result_feature.write(num, feature)
         return num+1,num_points,channels,result_feature,net0
 
 
     _,_,_,result_feature,_=tf.while_loop(cond_num,body_num,[0,num_point,channels,result_feature,net0])
     net0 = tf.transpose(result_feature.stack(),[1,0,2])   # result_feature.stack() (num_point,batch,channels) 所以需要转置
-    net0=   tf.reshape( net0,[batch_size,num_point,channels],name ='net0_stage1')
+    net0=   tf.reshape( net0,[batch_size,num_point,32],name ='net0_stage1')
     print(net0.get_shape().as_list(),"############################################################")
 
-    # result_feature=[]
-    # for i in range(batch_size):
-    #     print("batch="+str(i)+"#####################################################")
-    #     for j in range(num_point):
-    #         print("num_point="+str(j)+"#####################################################")
-    #         feature =  tf.slice(net0, [0+i,0+j,0], [1,1,channels]) # (N,1)
-    #         feature =tf.norm(tf.squeeze(feature,axis=0))
-    #         feature = extract_h2_features(tf.expand_dims(feature,axis=0),'extract_h2','extractor')
-    #         result_feature.append(feature)
     print('阶段1###########################################################################')
     # net0= tf.reshape(tf.concat(result_feature,axis=0),[batch_size,num_point,-1])
     print('阶段2###########################################################################')
@@ -169,70 +140,34 @@ def get_3d_box_estimation_v1_net(object_point_cloud, one_hot_vec,
     print(net0.get_shape().as_list(),'######################################################')
 
     # 这里对网络层的结构进行改动 ...... 卷积核采用相邻3个卷积....去除最后的池化(实验，如果恢复原来的直接看下一部分的那个...）
-    net0 = tf_util.conv2d(net0, 128, [3, 1],
+    net0 = tf_util.conv2d(net0, 128, [1, 1],
                          padding='SAME', stride=[1, 1],
                          bn=True, is_training=is_training,
-                         scope='conv-reg1_s', bn_decay=bn_decay)
-    net0 = tf_util.conv2d(net0, 128, [3, 1],
+                         scope='conv-reg1', bn_decay=bn_decay)
+    net0 = tf_util.conv2d(net0, 128, [1, 1],
                          padding='SAME', stride=[1, 1],
                          bn=True, is_training=is_training,
-                         scope='conv-reg2_s', bn_decay=bn_decay)
-    net0= tf_util.conv2d(net0, 256, [3, 1],
+                         scope='conv-reg2', bn_decay=bn_decay)
+    net0= tf_util.conv2d(net0, 256, [1, 1],
                          padding='SAME', stride=[1, 1],
                          bn=True, is_training=is_training,
-                         scope='conv-reg3_s', bn_decay=bn_decay)
-    net0 = tf_util.conv2d(net0, 512, [3, 1],
+                         scope='conv-reg3', bn_decay=bn_decay)
+    net0 = tf_util.conv2d(net0, 512, [1, 1],
                          padding='SAME', stride=[1, 1],
                          bn=True, is_training=is_training,
-                         scope='conv-reg4_s', bn_decay=bn_decay)
+                         scope='conv-reg4', bn_decay=bn_decay)
     net0 = tf_util.max_pool2d(net0, [num_point, 1],
-                         padding='VALID', scope='maxpool2_s')
+                         padding='VALID', scope='maxpool2')
     net0 = tf.squeeze(net0, axis=[1, 2])
     net0 = tf.concat([net0, one_hot_vec], axis=1)
-    net0 = tf_util.fully_connected(net0, 512, scope='fc1_s', bn=True,
+    net0 = tf_util.fully_connected(net0, 512, scope='fc1', bn=True,
                                   is_training=is_training, bn_decay=bn_decay)
-    net0 = tf_util.fully_connected(net0, 256, scope='fc2_s', bn=True,
+    net0 = tf_util.fully_connected(net0, 256, scope='fc2', bn=True,
                                   is_training=is_training, bn_decay=bn_decay)
-    output_size = tf_util.fully_connected(net0,
-                                             NUM_SIZE_CLUSTER * 4, activation_fn=None,
-                                             scope='fc3_s')
+    output = tf_util.fully_connected(net0,
+                                          3 + NUM_HEADING_BIN * 2+NUM_SIZE_CLUSTER * 4, activation_fn=None,
+                                             scope='fc3')         # 这里是进行特征增强并不是 只给它特定的特征所以一起学习
 
-    # output_center = tf.slice(  output_size_center , [0,0], [-1,3])
-    # output_size =  tf.slice(  output_size_center , [0,3], [-1,NUM_SIZE_CLUSTER * 4])
-    print('阶段3###########################################################################')
-    net = tf.expand_dims(object_point_cloud, 2)
-    net = tf_util.conv2d(net, 128, [1,1],
-                         padding='VALID', stride=[1,1],
-                         bn=True, is_training=is_training,
-                         scope='conv-reg1_h', bn_decay=bn_decay)
-    net = tf_util.conv2d(net, 128, [1,1],
-                         padding='VALID', stride=[1,1],
-                         bn=True, is_training=is_training,
-                         scope='conv-reg2_h', bn_decay=bn_decay)
-    net = tf_util.conv2d(net, 256, [1,1],
-                         padding='VALID', stride=[1,1],
-                         bn=True, is_training=is_training,
-                         scope='conv-reg3_h', bn_decay=bn_decay)
-    net = tf_util.conv2d(net, 512, [1,1],
-                         padding='VALID', stride=[1,1],
-                         bn=True, is_training=is_training,
-                         scope='conv-reg4_h', bn_decay=bn_decay)
-    net = tf_util.max_pool2d(net, [num_point,1],
-        padding='VALID', scope='maxpool2_h')
-    net = tf.squeeze(net, axis=[1,2])
-    net = tf.concat([net, one_hot_vec], axis=1)
-    net = tf_util.fully_connected(net, 512, scope='fc1_h', bn=True,
-        is_training=is_training, bn_decay=bn_decay)
-    net = tf_util.fully_connected(net, 256, scope='fc2_h', bn=True,
-        is_training=is_training, bn_decay=bn_decay)
-
-    # The first 3 numbers: box center coordinates (cx,cy,cz),
-    # the next NUM_HEADING_BIN*2:  heading bin class scores and bin residuals
-    # next NUM_SIZE_CLUSTER*4: box cluster scores and residuals
-    output_center_heading = tf_util.fully_connected(net,
-        3+NUM_HEADING_BIN*2, activation_fn=None, scope='fc3_h')
-    output = tf.concat([output_center_heading,output_size],axis=-1)
-    print('阶段4###########################################################################')
     return  output,end_points
 
 
